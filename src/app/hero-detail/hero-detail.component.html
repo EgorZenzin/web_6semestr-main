@@ -1,4 +1,4 @@
-<div *ngIf="hero">
+<div *ngIf="hero$ | async as hero">
   <h2>{{hero.name | uppercase}} Details</h2>
   
   <form [formGroup]="heroForm" (ngSubmit)="save()">
@@ -15,14 +15,18 @@
     <div class="form-group">
       <label for="hero-power">Уровень силы (0-100): </label>
       <input id="hero-power" type="number" formControlName="power" min="0" max="100"/>
-      <!-- Сообщение об ошибке -->
+      <div *ngIf="heroForm.get('power')?.invalid && heroForm.get('power')?.touched" class="error">
+        Уровень силы должен быть от 0 до 100
+      </div>
     </div>
 
     <!-- Уровень опыта -->
     <div class="form-group">
       <label for="hero-level">Уровень опыта (1-99): </label>
       <input id="hero-level" type="number" formControlName="level" min="1" max="99"/>
-      <!-- Сообщение об ошибке -->
+      <div *ngIf="heroForm.get('level')?.invalid && heroForm.get('level')?.touched" class="error">
+        Уровень опыта должен быть от 1 до 99
+      </div>
     </div>
 
     <!-- Категория -->
@@ -35,21 +39,27 @@
         <option value="Intelligence">Интеллект</option>
         <option value="Magic">Магия</option>
       </select>
-      <!-- Сообщение об ошибке -->
+      <div *ngIf="heroForm.get('category')?.invalid && heroForm.get('category')?.touched" class="error">
+        Выберите категорию
+      </div>
     </div>
 
     <!-- Описание -->
     <div class="form-group">
       <label for="hero-description">Описание: </label>
       <textarea id="hero-description" formControlName="description" rows="3"></textarea>
-      <!-- Сообщение об ошибке -->
+      <div *ngIf="heroForm.get('description')?.invalid && heroForm.get('description')?.touched" class="error">
+        Описание должно быть не менее 10 символов
+      </div>
     </div>
 
     <!-- Дата рождения -->
     <div class="form-group">
       <label for="hero-birthdate">Дата рождения: </label>
       <input id="hero-birthdate" type="date" formControlName="birthDate"/>
-      <!-- Сообщение об ошибке -->
+      <div *ngIf="heroForm.get('birthDate')?.invalid && heroForm.get('birthDate')?.touched" class="error">
+        Укажите дату рождения
+      </div>
     </div>
 
     <button type="button" (click)="goBack()">Назад</button>

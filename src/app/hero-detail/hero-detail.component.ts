@@ -1,7 +1,9 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Observable, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 import { Hero } from '../hero';
 import { HeroService } from '../hero.service';
@@ -9,12 +11,14 @@ import { HeroService } from '../hero.service';
 @Component({
   selector: 'app-hero-detail',
   templateUrl: './hero-detail.component.html',
-  styleUrls: [ './hero-detail.component.css' ],
+  styleUrls: ['./hero-detail.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class HeroDetailComponent implements OnInit {
-  hero: Hero | undefined;
+export class HeroDetailComponent implements OnInit, OnDestroy {
+  hero$!: Observable<Hero>;
   heroForm: FormGroup;
+  private destroy$ = new Subject<void>();
+  private hero!: Hero;
 
   constructor(
     private route: ActivatedRoute,
@@ -39,7 +43,9 @@ export class HeroDetailComponent implements OnInit {
 
   getHero(): void {
     const id = parseInt(this.route.snapshot.paramMap.get('id')!, 10);
-    this.heroService.getHero(id)
+    this.hero$ = this.heroService.getHero(id);
+    this.hero$
+      .pipe(takeUntil(this.destroy$))
       .subscribe(hero => {
         this.hero = hero;
         this.heroForm.patchValue(hero);
@@ -54,7 +60,13 @@ export class HeroDetailComponent implements OnInit {
     if (this.heroForm.valid && this.hero) {
       const updatedHero = { ...this.hero, ...this.heroForm.value };
       this.heroService.updateHero(updatedHero)
+        .pipe(takeUntil(this.destroy$))
         .subscribe(() => this.goBack());
     }
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

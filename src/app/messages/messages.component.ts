@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MessageService } from '../message.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-messages',
@@ -8,7 +9,9 @@ import { MessageService } from '../message.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MessagesComponent {
+  messages$: Observable<string[]>;
 
-  constructor(public messageService: MessageService) {}
-
+  constructor(public messageService: MessageService) {
+    this.messages$ = this.messageService.messages$;
+  }
 }
