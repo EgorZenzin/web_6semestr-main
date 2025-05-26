@@ -1,10 +1,58 @@
 <div *ngIf="hero">
   <h2>{{hero.name | uppercase}} Details</h2>
-  <div><span>id: </span>{{hero.id}}</div>
-  <div>
-    <label for="hero-name">Hero name: </label>
-    <input id="hero-name" [(ngModel)]="hero.name" placeholder="Hero name"/>
-  </div>
-  <button type="button" (click)="goBack()">go back</button>
-  <button type="button" (click)="save()">save</button>
+  
+  <form [formGroup]="heroForm" (ngSubmit)="save()">
+    <!-- Имя героя -->
+    <div class="form-group">
+      <label for="hero-name">Имя героя: </label>
+      <input id="hero-name" formControlName="name" placeholder="Имя героя"/>
+      <div *ngIf="heroForm.get('name')?.invalid && heroForm.get('name')?.touched" class="error">
+        Имя обязательно
+      </div>
+    </div>
+
+    <!-- Уровень силы -->
+    <div class="form-group">
+      <label for="hero-power">Уровень силы (0-100): </label>
+      <input id="hero-power" type="number" formControlName="power" min="0" max="100"/>
+      <!-- Сообщение об ошибке -->
+    </div>
+
+    <!-- Уровень опыта -->
+    <div class="form-group">
+      <label for="hero-level">Уровень опыта (1-99): </label>
+      <input id="hero-level" type="number" formControlName="level" min="1" max="99"/>
+      <!-- Сообщение об ошибке -->
+    </div>
+
+    <!-- Категория -->
+    <div class="form-group">
+      <label for="hero-category">Категория: </label>
+      <select id="hero-category" formControlName="category">
+        <option value="">Выберите категорию</option>
+        <option value="Strength">Сила</option>
+        <option value="Speed">Скорость</option>
+        <option value="Intelligence">Интеллект</option>
+        <option value="Magic">Магия</option>
+      </select>
+      <!-- Сообщение об ошибке -->
+    </div>
+
+    <!-- Описание -->
+    <div class="form-group">
+      <label for="hero-description">Описание: </label>
+      <textarea id="hero-description" formControlName="description" rows="3"></textarea>
+      <!-- Сообщение об ошибке -->
+    </div>
+
+    <!-- Дата рождения -->
+    <div class="form-group">
+      <label for="hero-birthdate">Дата рождения: </label>
+      <input id="hero-birthdate" type="date" formControlName="birthDate"/>
+      <!-- Сообщение об ошибке -->
+    </div>
+
+    <button type="button" (click)="goBack()">Назад</button>
+    <button type="submit" [disabled]="!heroForm.valid">Сохранить</button>
+  </form>
 </div>

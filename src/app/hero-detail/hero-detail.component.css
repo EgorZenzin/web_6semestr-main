@@ -1,12 +1,30 @@
 /* HeroDetailComponent's private CSS styles */
+.form-group {
+  margin-bottom: 1rem;
+}
+
 label {
   color: #435960;
   font-weight: bold;
+  display: block;
+  margin-bottom: 0.5rem;
 }
-input {
+
+input, select, textarea {
   font-size: 1em;
   padding: .5rem;
+  width: 100%;
+  max-width: 400px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: #039be5;
+}
+
 button {
   margin-top: 20px;
   margin-right: .5rem;
@@ -14,12 +32,22 @@ button {
   padding: 1rem;
   border-radius: 4px;
   font-size: 1rem;
+  border: none;
+  cursor: pointer;
 }
+
 button:hover {
   background-color: #cfd8dc;
 }
+
 button:disabled {
   background-color: #eee;
   color: #ccc;
-  cursor: auto;
+  cursor: not-allowed;
+}
+
+.error {
+  color: #d32f2f;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
 }
